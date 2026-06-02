@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>烽火技术服务运营中心 - 数字技术部</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        zeekr: {
+                            black: '#0a0a0a',
+                            dark: '#111111',
+                            card: '#1a1a1a',
+                            border: '#2a2a2a',
+                            accent: '#00d4ff',
+                            glow: '#00d4ff',
+                            secondary: '#7c3aed',
+                            text: '#e5e5e5',
+                            muted: '#888888',
+                            surface: '#141414'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'Noto Sans SC', 'sans-serif'],
+                        display: ['Inter', 'Noto Sans SC', 'sans-serif'],
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                        'slide-up': 'slideUp 0.8s ease-out forwards',
+                        'fade-in': 'fadeIn 1s ease-out forwards',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        glow: {
+                            '0%': { boxShadow: '0 0 5px rgba(0, 212, 255, 0.2), 0 0 20px rgba(0, 212, 255, 0.1)' },
+                            '100%': { boxShadow: '0 0 20px rgba(0, 212, 255, 0.4), 0 0 40px rgba(0, 212, 255, 0.2)' },
+                        },
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(40px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0a0a0a;
+            color: #e5e5e5;
+            font-family: 'Inter', 'Noto Sans SC', sans-serif;
+            overflow-x: hidden;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2a2a2a;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00d4ff;
+        }
+
+        /* Glassmorphism */
+        .glass {
+            background: rgba(26, 26, 26, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(42, 42, 42, 0.5);
+        }
+
+        .glass-card {
+            background: rgba(26, 26, 26, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(42, 42, 42, 0.6);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-card:hover {
+            border-color: rgba(0, 212, 255, 0.3);
+            background: rgba(26, 26, 26, 0.8);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 30px rgba(0, 212, 255, 0.1);
+        }
+
+        /* Neon Text */
+        .neon-text {
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.5), 0 0 40px rgba(0, 212, 255, 0.2);
+        }
+
+        .neon-border {
+            position: relative;
+        }
+        .neon-border::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, #00d4ff, #7c3aed);
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        .neon-border:hover::after {
+            transform: scaleX(1);
+        }
+
+        /* Grid Background */
+        .grid-bg {
+            background-image: 
+                linear-gradient(rgba(0, 212, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 212, 255, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+        }
+
+        /* Gradient Orbs */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.15;
+            pointer-events: none;
+        }
+
+        /* Product Card Active State */
+        .product-tab.active {
+            color: #00d4ff;
+            border-bottom: 2px solid #00d4ff;
+        }
+
+        /* Map Pin Pulse */
+        .pin-pulse {
+            animation: pinPulse 2s ease-out infinite;
+        }
+        @keyframes pinPulse {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(2.5); opacity: 0; }
+        }
+
+        /* Reveal Animation */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Hero Canvas */
+        #hero-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        /* Smooth Scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Custom Selection */
+        ::selection {
+            background: rgba(0, 212, 255, 0.3);
+            color: #fff;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Navigation -->
+    <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-500">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-zeekr-accent to-zeekr-secondary rounded-lg flex items-center justify-center shadow-lg shadow-zeekr-accent/20">
+                        <span class="text-white font-bold text-lg">F</span>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-white font-bold text-lg tracking-tight">FiberHome</span>
+                        <span class="text-zeekr-muted text-xs tracking-widest uppercase">Technical Services</span>
+                    </div>
+                </div>
+                
+                <div class="hidden md:flex items-center gap-8">
+                    <a href="#home" class="text-sm text-zeekr-text hover:text-zeekr-accent transition-colors neon-border py-1">首页</a>
+                    <a href="#about" class="text-sm text-zeekr-text hover:text-zeekr-accent transition-colors neon-border py-1">关于我们</a>
+                    <a href="#products" class="text-sm text-zeekr-text hover:text-zeekr-accent transition-colors neon-border py-1">交付产品</a>
+                    <a href="#news" class="text-sm text-zeekr-text hover:text-zeekr-accent transition-colors neon-border py-1">新闻中心</a>
+                    <a href="#contact" class="text-sm text-zeekr-text hover:text-zeekr-accent transition-colors neon-border py-1">联系我们</a>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <button class="hidden md:block px-5 py-2 rounded-full border border-zeekr-border text-sm text-zeekr-text hover:border-zeekr-accent hover:text-zeekr-accent transition-all">
+                        申请演示
+                    </button>
+                    <button class="px-5 py-2 rounded-full bg-gradient-to-r from-zeekr-accent to-zeekr-secondary text-white text-sm font-medium hover:shadow-lg hover:shadow-zeekr-accent/30 transition-all transform hover:scale-105">
+                        合作咨询
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative min-h-screen flex items-center justify-center overflow-hidden grid-bg">
+        <canvas id="hero-canvas"></canvas>
+        
+        <!-- Gradient Orbs -->
+        <div class="orb w-96 h-96 bg-zeekr-accent top-20 left-10"></div>
+        <div class="orb w-80 h-80 bg-zeekr-secondary bottom-20 right-10"></div>
+        <div class="orb w-64 h-64 bg-blue-600 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
+
+        <div class="relative z-10 max-w-7xl mx-auto px-6 text-center">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-8 animate-fade-in">
+                <span class="w-2 h-2 rounded-full bg-zeekr-accent animate-pulse"></span>
+                <span class="text-zeekr-accent text-sm font-medium tracking-wide">数字技术部</span>
+            </div>
+            
+            <h1 class="text-5xl md:text-7xl lg:text-8xl font-black text-white mb-6 leading-tight animate-slide-up">
+                烽火技术服务<br>
+                <span class="bg-gradient-to-r from-zeekr-accent via-blue-400 to-zeekr-secondary bg-clip-text text-transparent neon-text">
+                    运营中心
+                </span>
+            </h1>
+            
+            <p class="text-xl md:text-2xl text-zeekr-muted mb-4 max-w-3xl mx-auto animate-slide-up" style="animation-delay: 0.2s">
+                聚焦软件制作 · 关注技术创新
+            </p>
+            <p class="text-sm md:text-base text-zeekr-muted/60 mb-12 max-w-2xl mx-auto animate-slide-up" style="animation-delay: 0.3s">
+                依托烽火通信深厚技术积淀，提供光网络、数据网络等全领域服务解决方案
+            </p>
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-center animate-slide-up" style="animation-delay: 0.4s">
+                <button class="px-8 py-4 rounded-full bg-gradient-to-r from-zeekr-accent to-blue-600 text-white font-semibold text-lg hover:shadow-2xl hover:shadow-zeekr-accent/40 transition-all transform hover:scale-105 flex items-center justify-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    申请演示
+                </button>
+                <button class="px-8 py-4 rounded-full border border-zeekr-border text-white font-semibold text-lg hover:border-zeekr-accent hover:bg-zeekr-accent/10 transition-all flex items-center justify-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                    合作咨询
+                </button>
+            </div>
+
+            <!-- Stats -->
+            <div class="mt-20 grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto animate-slide-up" style="animation-delay: 0.6s">
+                <div class="glass-card rounded-2xl p-6 text-center">
+                    <div class="text-3xl font-bold text-zeekr-accent mb-1">900+</div>
+                    <div class="text-xs text-zeekr-muted">技术人员</div>
+                </div>
+                <div class="glass-card rounded-2xl p-6 text-center">
+                    <div class="text-3xl font-bold text-zeekr-accent mb-1">391</div>
+                    <div class="text-xs text-zeekr-muted">项专利</div>
+                </div>
+                <div class="glass-card rounded-2xl p-6 text-center">
+                    <div class="text-3xl font-bold text-zeekr-accent mb-1">128</div>
+                    <div class="text-xs text-zeekr-muted">软件著作权</div>
+                </div>
+                <div class="glass-card rounded-2xl p-6 text-center">
+                    <div class="text-3xl font-bold text-zeekr-accent mb-1">7×24</div>
+                    <div class="text-xs text-zeekr-muted">全球响应</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <svg class="w-6 h-6 text-zeekr-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="relative py-24 overflow-hidden">
+        <div class="orb w-72 h-72 bg-zeekr-accent/20 top-0 right-0"></div>
+        
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-4xl md:text-5xl font-bold text-white mb-4">ABOUT US</h2>
+                <div class="w-24 h-1 bg-gradient-to-r from-zeekr-accent to-zeekr-secondary mx-auto rounded-full"></div>
+                <p class="text-zeekr-muted mt-4 text-lg">关于我们</p>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <div class="reveal">
+                    <div class="glass rounded-3xl p-8 md:p-12 relative overflow-hidden group">
+                        <div class="absolute inset-0 bg-gradient-to-br from-zeekr-accent/5 to-zeekr-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        
+                        <div class="relative z-10">
+                            <h3 class="text-2xl font-bold text-white mb-2">武汉烽火技术服务有限公司</h3>
+                            <p class="text-zeekr-accent text-sm mb-6 tracking-wider">WUHAN FIBERHOME TECHNICAL SERVICES CO.,LTD</p>
+                            
+                            <div class="space-y-4 text-zeekr-text/80 text-sm leading-relaxed">
+                                <p>武汉烽火技术服务有限公司成立于 2013 年 3 月，是中国信科旗下烽火通信全资子公司，总部位于武汉洪山区，为国家级高新技术企业与企业技术中心。公司注册资本 1.7 亿余元，现有员工 900 余人，专注信息通信领域综合服务。</p>
+                                <p>依托烽火通信深厚技术积淀，公司提供光网络、数据网络等全领域服务解决方案，涵盖规划设计、施工集成、运维保障等全链条服务。凭借 391 项专利与 128 项软件著作权的技术支撑，服务覆盖国内 300 多个本地网及亚、非、欧等海外市场，参与国家多级干线建设，以 7×24 小时全球响应体系打造高效服务体验。</p>
+                            </div>
+
+                            <div class="mt-8 flex gap-4">
+                                <div class="flex items-center gap-2 text-zeekr-accent">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    <span class="text-sm font-medium">国家级高新技术企业</span>
+                                </div>
+                                <div class="flex items-center gap-2 text-zeekr-accent">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    <span class="text-sm font-medium">企业技术中心</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reveal relative">
+                    <div class="relative rounded-3xl overflow-hidden aspect-video group">
+                        <div class="absolute inset-0 bg-gradient-to-t from-zeekr-black/80 via-transparent to-transparent z-10"></div>
+                        <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&h=500&fit=crop" alt="FiberHome Building" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">
+                        
+                        <!-- Floating Badge -->
+                        <div class="absolute bottom-6 left-6 z-20 glass rounded-xl px-4 py-3 flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-zeekr-accent to-zeekr-secondary flex items-center justify-center">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                            </div>
+                            <div>
+                                <div class="text-white text-sm font-bold">FiberHome Tower</div>
+                                <div class="text-zeekr-muted text-xs">武汉 · 中国光谷</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Decorative Elements -->
+                    <div class="absolute -top-4 -right-4 w-24 h-24 border border-zeekr-accent/20 rounded-full"></div>
+                    <div class="absolute -bottom-4 -left-4 w-16 h-16 border border-zeekr-secondary/20 rounded-full"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- News Section -->
+    <section id="news" class="relative py-24 bg-zeekr-dark">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-4xl md:text-5xl font-bold text-white mb-4">NEWS CENTER</h2>
+                <div class="w-24 h-1 bg-gradient-to-r from-zeekr-accent to-zeekr-secondary mx-auto rounded-full"></div>
+                <p class="text-zeekr-muted mt-4 text-lg">新闻中心</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- News Card 1 -->
+                <article class="glass-card rounded-2xl overflow-hidden group reveal cursor-pointer">
+                    <div class="h-48 overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600&h=400&fit=crop" alt="Tech Exchange" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute top-4 left-4 glass rounded-lg px-3 py-1">
+                            <span class="text-zeekr-accent text-xs font-bold">08-11</span>
+                            <span class="text-zeekr-muted text-xs ml-1">2025</span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-white font-bold text-lg mb-3 group-hover:text-zeekr-accent transition-colors line-clamp-2">
+                            武汉烽火技术服务有限公司与乌兰察布供电公司开展技术交流
+                        </h3>
+                        <p class="text-zeekr-muted text-sm leading-relaxed mb-4 line-clamp-3">
+                            8 月 11 日，武汉烽火技术服务有限公司技术团队到访内蒙古电力集团乌兰察布供电公司信息通信处，双方就深化技术合作、推动创新应用等议题进行了...
+                        </p>
+                        <a href="#" class="inline-flex items-center text-zeekr-accent text-sm font-medium hover:gap-2 transition-all gap-1">
+                            阅读详情
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                        </a>
+                    </div>
+                </article>
+
+                <!-- News Card 2 -->
+                <article class="glass-card rounded-2xl overflow-hidden group reveal cursor-pointer" style="transition-delay: 0.1s">
+                    <div class="h-48 overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600&h=400&fit=crop" alt="Data Center" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute top-4 left-4 glass rounded-lg px-3 py-1">
+                            <span class="text-zeekr-accent text-xs font-bold">08-11</span>
+                            <span class="text-zeekr-muted text-xs ml-1">2025</span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-white font-bold text-lg mb-3 group-hover:text-zeekr-accent transition-colors line-clamp-2">
+                            烽火技术服务助力东南亚光网络升级项目顺利交付
+                        </h3>
+                        <p class="text-zeekr-muted text-sm leading-relaxed mb-4 line-clamp-3">
+                            近日，烽火技术服务团队成功完成泰国某运营商光网络升级项目，通过自主研发的WOS工单管理系统，实现项目交付效率提升40%...
+                        </p>
+                        <a href="#" class="inline-flex items-center text-zeekr-accent text-sm font-medium hover:gap-2 transition-all gap-1">
+                            阅读详情
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                        </a>
+                    </div>
+                </article>
+
+                <!-- News Card 3 -->
+                <article class="glass-card rounded-2xl overflow-hidden group reveal cursor-pointer" style="transition-delay: 0.2s">
+                    <div class="h-48 overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&h=400&fit=crop" alt="AI Technology" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute top-4 left-4 glass rounded-lg px-3 py-1">
+                            <span class="text-zeekr-accent text-xs font-bold">08-11</span>
+                            <span class="text-zeekr-muted text-xs ml-1">2025</span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-white font-bold text-lg mb-3 group-hover:text-zeekr-accent transition-colors line-clamp-2">
+                            数字技术部发布新一代AI智能运维平台
+                        </h3>
+                        <p class="text-zeekr-muted text-sm leading-relaxed mb-4 line-clamp-3">
+                            烽火技术服务数字技术部正式推出基于人工智能的智能运维平台，融合大数据分析与机器学习技术，实现网络故障预测准确率达95%...
+                        </p>
+                        <a href="#" class="inline-flex items-center text-zeekr-accent text-sm font-medium hover:gap-2 transition-all gap-1">
+                            阅读详情
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                        </a>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Center -->
+    <section id="products" class="relative py-24 overflow-hidden">
+        <div class="orb w-96 h-96 bg-zeekr-secondary/10 bottom-0 left-0"></div>
+        
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-4xl md:text-5xl font-bold text-white mb-4">PRODUCT CENTER</h2>
+                <div class="w-24 h-1 bg-gradient-to-r from-zeekr-accent to-zeekr-secondary mx-auto rounded-full"></div>
+                <p class="text-zeekr-muted mt-4 text-lg">产品中心</p>
+            </div>
+
+            <!-- Product Tabs -->
+            <div class="flex flex-wrap justify-center gap-2 mb-12 reveal">
+                <button class="product-tab active px-6 py-2 rounded-full text-sm font-medium transition-all" onclick="switchTab(this, 'philippines')">菲律宾专区</button>
+                <button class="product-tab px-6 py-2 rounded-full text-sm font-medium text-zeekr-muted hover:text-white transition-all" onclick="switchTab(this, 'indonesia')">印尼专区</button>
+                <button class="product-tab px-6 py-2 rounded-full text-sm font-medium text-zeekr-muted hover:text-white transition-all" onclick="switchTab(this, 'americas')">美洲专区</button>
+                <button class="product-tab px-6 py-2 rounded-full text-sm font-medium text-zeekr-muted hover:text-white transition-all" onclick="switchTab(this, 'thailand')">泰国专区</button>
+                <button class="product-tab px-6 py-2 rounded-full text-sm font-medium text-zeekr-muted hover:text-white transition-all" onclick="switchTab(this, 'ai')">AI专区</button>
+                <button class="product-tab px-6 py-2 rounded-full text-sm font-medium text-zeekr-muted hover:text-white transition-all" onclick="switchTab(this, 'production')">生产系统</button>
+                <button class="product-tab px-6 py-2 rounded-full text-sm font-medium text-zeekr-muted hover:text-white transition-all" onclick="switchTab(this, 'network')">网络运维</button>
+            </div>
+
+            <!-- Product Content -->
+            <div class="relative reveal">
+                <div class="grid md:grid-cols-3 gap-6" id="product-grid">
+                    <!-- Product 1 -->
+                    <div class="glass-card rounded-2xl overflow-hidden group cursor-pointer">
+                        <div class="h-56 bg-gradient-to-br from-zeekr-dark to-zeekr-card relative overflow-hidden p-6 flex flex-col justify-end">
+                            <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=400&fit=crop')] bg-cover bg-center opacity-30 group-hover:opacity-50 transition-opacity"></div>
+                            <div class="absolute top-4 right-4 w-12 h-12 rounded-full bg-zeekr-accent/20 flex items-center justify-center">
+                                <svg class="w-6 h-6 text-zeekr-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+                            </div>
+                            <div class="relative z-10">
+                                <div class="text-zeekr-accent text-xs font-bold mb-1 tracking-wider">FTK WORK ORDER</div>
+                                <h3 class="text-white font-bold text-lg">总包项目交付工单管理系统</h3>
+                                <p class="text-zeekr-muted text-xs mt-1">WOS</p>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <p class="text-zeekr-muted text-sm leading-relaxed">
+                                实现项目交付全流程数字化管理，支持工单自动派发、进度实时追踪、资源智能调度，提升项目交付效率40%以上。
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Product 2 -->
+                    <div class="glass-card rounded-2xl overflow-hidden group cursor-pointer">
+                        <div class="h-56 bg-gradient-to-br from-blue-900/30 to-zeekr-card relative overflow-hidden p-6 flex flex-col justify-end">
+                            <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=600&h=400&fit=crop')] bg-cover bg-center opacity-30 group-hover:opacity-50 transition-opacity"></div>
+                            <div class="absolute top-4 right-4 w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center">
+                                <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                            </div>
+                            <div class="relative z-10">
+                                <div class="text-blue-400 text-xs font-bold mb-1 tracking-wider">QUALITY ASSURANCE</div>
+                                <h3 class="text-white font-bold text-lg">现场作业质量管理系统</h3>
+                                <p class="text-zeekr-muted text-xs mt-1">GA</p>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <p class="text-zeekr-muted text-sm leading-relaxed">
+                                通用版现场作业QMD，实现自定义的施工工序和站点权限，通过拍照及上传文件、审核对施工质量进行管理。
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Product 3 -->
+                    <div class="glass-card rounded-2xl overflow-hidden group cursor-pointer">
+                        <div class="h-56 bg-gradient-to-br from-rose-900/30 to-zeekr-card relative overflow-hidden p-6 flex flex-col justify-end">
+                            <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=400&fit=crop')] bg-cover bg-center opacity-30 group-hover:opacity-50 transition-opacity"></div>
+                            <div class="absolute top-4 right-4 w-12 h-12 rounded-full bg-rose-500/20 flex items-center justify-center">
+                                <svg class="w-6 h-6 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                            </div>
+                            <div class="relative z-10">
+                                <div class="text-rose-400 text-xs font-bold mb-1 tracking-wider">PROJECT ONE</div>
+                                <h3 class="text-white font-bold text-lg">质量管理系统</h3>
+                                <p class="text-zeekr-muted text-xs mt-1">Project One</p>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <p class="text-zeekr-muted text-sm leading-relaxed">
+                                现场作业质量管理系统—Project One，提供全流程质量管控方案，确保海外项目交付标准统一、质量可控。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Navigation Arrows -->
+                <div class="flex justify-center gap-4 mt-8">
+                    <button class="w-12 h-12 rounded-full glass flex items-center justify-center text-zeekr-text hover:text-zeekr-accent hover:border-zeekr-accent transition-all">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                    </button>
+                    <button class="w-12 h-12 rounded-full glass flex items-center justify-center text-zeekr-text hover:text-zeekr-accent hover:border-zeekr-accent transition-all">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Global Map Section -->
+    <section class="relative py-24 bg-zeekr-dark overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid lg:grid-cols-5 gap-12 items-center">
+                <div class="lg:col-span-3 reveal">
+                    <div class="relative rounded-3xl overflow-hidden aspect-[16/10] bg-zeekr-card border border-zeekr-border">
+                        <!-- Stylized World Map Background -->
+                        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?w=1200&h=700&fit=crop')] bg-cover bg-center opacity-20"></div>
+                        
+                        <!-- Grid Overlay -->
+                        <div class="absolute inset-0 grid-bg opacity-30"></div>
+
+                        <!-- Map Pins -->
+                        <div class="absolute top-[35%] left-[75%] group cursor-pointer">
+                            <div class="relative">
+                                <div class="w-4 h-4 bg-zeekr-accent rounded-full animate-pulse"></div>
+                                <div class="absolute inset-0 w-4 h-4 bg-zeekr-accent rounded-full pin-pulse"></div>
+                                <div class="absolute top-6 left-1/2 transform -translate-x-1/2 glass rounded-lg px-3 py-2 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <span class="text-zeekr-accent text-xs font-bold">Philippines</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="absolute top-[30%] left-[70%] group cursor-pointer">
+                            <div class="relative">
+                                <div class="w-4 h-4 bg-zeekr-accent rounded-full animate-pulse" style="animation-delay: 0.5s"></div>
+                                <div class="absolute inset-0 w-4 h-4 bg-zeekr-accent rounded-full pin-pulse" style="animation-delay: 0.5s"></div>
+                                <div class="absolute top-6 left-1/2 transform -translate-x-1/2 glass rounded-lg px-3 py-2 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <span class="text-zeekr-accent text-xs font-bold">Thailand</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="absolute top-[25%] left-[68%] group cursor-pointer">
+                            <div class="relative">
+                                <div class="w-4 h-4 bg-zeekr-accent rounded-full animate-pulse" style="animation-delay: 1s"></div>
+                                <div class="absolute inset-0 w-4 h-4 bg-zeekr-accent rounded-full pin-pulse" style="animation-delay: 1s"></div>
+                                <div class="absolute top-6 left-1/2 transform -translate-x-1/2 glass rounded-lg px-3 py-2 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <span class="text-zeekr-accent text-xs font-bold">Thailand</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="absolute top-[40%] left-[72%] group cursor-pointer">
+                            <div class="relative">
+                                <div class="w-4 h-4 bg-zeekr-secondary rounded-full animate-pulse" style="animation-delay: 1.5s"></div>
+                                <div class="absolute inset-0 w-4 h-4 bg-zeekr-secondary rounded-full pin-pulse" style="animation-delay: 1.5s"></div>
+                                <div class="absolute top-6 left-1/2 transform -translate-x-1/2 glass rounded-lg px-3 py-2 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <span class="text-zeekr-secondary text-xs font-bold">Thailand</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Connection Lines SVG -->
+                        <svg class="absolute inset-0 w-full h-full pointer-events-none" style="opacity: 0.3">
+                            <defs>
+                                <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" style="stop-color:#00d4ff;stop-opacity:0" />
+                                    <stop offset="50%" style="stop-color:#00d4ff;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#7c3aed;stop-opacity:0" />
+                                </linearGradient>
+                            </defs>
+                            <path d="M 70% 30% Q 65% 35% 72% 40%" stroke="url(#lineGrad)" stroke-width="1" fill="none" stroke-dasharray="5,5">
+                                <animate attributeName="stroke-dashoffset" from="0" to="20" dur="2s" repeatCount="indefinite"/>
+                            </path>
+                            <path d="M 75% 35% Q 80% 30% 70% 25%" stroke="url(#lineGrad)" stroke-width="1" fill="none" stroke-dasharray="5,5">
+                                <animate attributeName="stroke-dashoffset" from="0" to="20" dur="3s" repeatCount="indefinite"/>
+                            </path>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-2 reveal">
+                    <div class="glass rounded-2xl p-8">
+                        <h3 class="text-2xl font-bold text-white mb-6">全球服务网络</h3>
+                        
+                        <div class="space-y-6">
+                            <div class="flex items-start gap-4">
+                                <div class="w-10 h-10 rounded-lg bg-zeekr-accent/10 flex items-center justify-center flex-shrink-0">
+                                    <span class="text-zeekr-accent font-bold">PH</span>
+                                </div>
+                                <div>
+                                    <h4 class="text-white font-medium mb-1">Philippines</h4>
+                                    <p class="text-zeekr-muted text-sm">菲律宾项目实景图 + 系统应用数据截图</p>
+                                    <div class="mt-2 flex gap-2">
+                                        <span class="px-2 py-1 rounded bg-zeekr-accent/10 text-zeekr-accent text-xs">WOS系统</span>
+                                        <span class="px-2 py-1 rounded bg-zeekr-secondary/10 text-zeekr-secondary text-xs">GA质量</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start gap-4">
+                                <div class="w-10 h-10 rounded-lg bg-zeekr-accent/10 flex items-center justify-center flex-shrink-0">
+                                    <span class="text-zeekr-accent font-bold">TH</span>
+                                </div>
+                                <div>
+                                    <h4 class="text-white font-medium mb-1">Thailand</h4>
+                                    <p class="text-zeekr-muted text-sm">泰国本地网全覆盖，7×24小时响应</p>
+                                    <div class="mt-2 flex gap-2">
+                                        <span class="px-2 py-1 rounded bg-zeekr-accent/10 text-zeekr-accent text-xs">网络运维</span>
+                                        <span class="px-2 py-1 rounded bg-blue-500/10 text-blue-400 text-xs">AI监控</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start gap-4">
+                                <div class="w-10 h-10 rounded-lg bg-zeekr-accent/10 flex items-center justify-center flex-shrink-0">
+                                    <span class="text-zeekr-accent font-bold">ID</span>
+                                </div>
+                                <div>
+                                    <h4 class="text-white font-medium mb-1">Indonesia</h4>
+                                    <p class="text-zeekr-muted text-sm">印尼群岛光网络建设与维护</p>
+                                    <div class="mt-2 flex gap-2">
+                                        <span class="px-2 py-1 rounded bg-zeekr-accent/10 text-zeekr-accent text-xs">施工集成</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-8 pt-6 border-t border-zeekr-border">
+                            <div class="flex items-center justify-between text-sm">
+                                <span class="text-zeekr-muted">覆盖区域</span>
+                                <span class="text-white font-bold">亚 · 非 · 欧</span>
+                            </div>
+                            <div class="flex items-center justify-between text-sm mt-2">
+                                <span class="text-zeekr-muted">本地网数量</span>
+                                <span class="text-zeekr-accent font-bold">300+</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact" class="relative bg-zeekr-black border-t border-zeekr-border pt-16 pb-8">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid md:grid-cols-4 gap-12 mb-12">
+                <div class="md:col-span-1">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-10 h-10 bg-gradient-to-br from-zeekr-accent to-zeekr-secondary rounded-lg flex items-center justify-center">
+                            <span class="text-white font-bold text-lg">F</span>
+                        </div>
+                        <div>
+                            <span class="text-white font-bold text-lg">FiberHome</span>
+                        </div>
+                    </div>
+                    <p class="text-zeekr-muted text-sm leading-relaxed">
+                        聚焦软件制作，关注技术创新<br>
+                        打造全球领先的技术服务运营中心
+                    </p>
+                </div>
+
+                <div>
+                    <h4 class="text-white font-bold mb-4">快速链接</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#about" class="text-zeekr-muted text-sm hover:text-zeekr-accent transition-colors">关于我们</a></li>
+                        <li><a href="#news" class="text-zeekr-muted text-sm hover:text-zeekr-accent transition-colors">新闻中心</a></li>
+                        <li><a href="#products" class="text-zeekr-muted text-sm hover:text-zeekr-accent transition-colors">产品中心</a></li>
+                        <li><a href="#" class="text-zeekr-muted text-sm hover:text-zeekr-accent transition-colors">服务与支持</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-white font-bold mb-4">企业责任</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-zeekr-muted text-sm hover:text-zeekr-accent transition-colors">企业社会责任</a></li>
+                        <li><a href="#" class="text-zeekr-muted text-sm hover:text-zeekr-accent transition-colors">可持续发展</a></li>
+                        <li><a href="#" class="text-zeekr-muted text-sm hover:text-zeekr-accent transition-colors">加入我们</a></li>
+                        <li><a href="#" class="text-zeekr-muted text-sm hover:text-zeekr-accent transition-colors">联系我们</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-white font-bold mb-4">联系方式</h4>
+                    <div class="space-y-3 text-sm">
+                        <div class="flex items-start gap-3 text-zeekr-muted">
+                            <svg class="w-5 h-5 text-zeekr-accent flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                            <span>湖北省武汉市东湖新技术开发区高新四路6号<br>(NO.6, GAOXINSILU, EAST LAKE HIGH-TECH DEVELOPMENT ZONE, WUHAN, HUBEI)</span>
+                        </div>
+                        <div class="flex items-center gap-3 text-zeekr-muted">
+                            <svg class="w-5 h-5 text-zeekr-accent flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+                            <span>888-88888888 / 888-88888888</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6">
+                        <div class="w-24 h-24 bg-white rounded-lg p-2 flex items-center justify-center">
+                            <div class="w-full h-full bg-gradient-to-br from-zeekr-dark to-zeekr-card rounded flex items-center justify-center">
+                                <svg class="w-8 h-8 text-zeekr-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"></path></svg>
+                            </div>
+                        </div>
+                        <p class="text-zeekr-muted text-xs mt-2">公众号二维码</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-t border-zeekr-border pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-zeekr-muted text-xs">
+                    Copyright © FiberHome 2024. All Rights Reserved. 鄂B2-20080076-3 鄂公网安备 42018502002396号
+                </p>
+                <div class="flex items-center gap-2">
+                    <span class="text-zeekr-muted text-xs">FiberHome</span>
+                    <div class="w-8 h-8 bg-gradient-to-br from-zeekr-accent to-zeekr-secondary rounded-full flex items-center justify-center">
+                        <span class="text-white text-xs font-bold">F</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating Action Buttons -->
+    <div class="fixed right-6 bottom-24 flex flex-col gap-3 z-40">
+        <button class="w-12 h-12 rounded-full glass flex items-center justify-center text-zeekr-text hover:text-zeekr-accent hover:border-zeekr-accent transition-all shadow-lg" onclick="document.getElementById('contact').scrollIntoView({behavior: 'smooth'})">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+        </button>
+        <button class="w-12 h-12 rounded-full glass flex items-center justify-center text-zeekr-text hover:text-zeekr-accent hover:border-zeekr-accent transition-all shadow-lg" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
+        </button>
+    </div>
+
+    <script>
+        // Navbar Scroll Effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('glass');
+                navbar.classList.add('py-2');
+                navbar.classList.remove('py-4');
+            } else {
+                navbar.classList.remove('glass');
+                navbar.classList.remove('py-2');
+                navbar.classList.add('py-4');
+            }
+        });
+
+        // Reveal Animation on Scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // Product Tab Switching
+        function switchTab(btn, category) {
+            document.querySelectorAll('.product-tab').forEach(tab => {
+                tab.classList.remove('active');
+                tab.classList.add('text-zeekr-muted');
+            });
+            btn.classList.add('active');
+            btn.classList.remove('text-zeekr-muted');
+            
+            // Animate product grid
+            const grid = document.getElementById('product-grid');
+            grid.style.opacity = '0';
+            grid.style.transform = 'translateY(20px)';
+            setTimeout(() => {
+                grid.style.opacity = '1';
+                grid.style.transform = 'translateY(0)';
+            }, 300);
+        }
+
+        // Hero Canvas Particle Animation
+        const canvas = document.getElementById('hero-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        let width, height;
+        let particles = [];
+        
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.size = Math.random() * 2;
+                this.opacity = Math.random() * 0.5 + 0.1;
+            }
+            
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                
+                if (this.x < 0 || this.x > width) this.vx *= -1;
+                if (this.y < 0 || this.y > height) this.vy *= -1;
+            }
+            
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(0, 212, 255, ${this.opacity})`;
+                ctx.fill();
+            }
+        }
+        
+        function initParticles() {
+            particles = [];
+            const count = Math.min(width / 10, 100);
+            for (let i = 0; i < count; i++) {
+                particles.push(new Particle());
+            }
+        }
+        
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            
+            // Draw connections
+            particles.forEach((p1, i) => {
+                particles.slice(i + 1).forEach(p2 => {
+                    const dx = p1.x - p2.x;
+                    const dy = p1.y - p2.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (dist < 150) {
+                        ctx.beginPath();
+                        ctx.moveTo(p1.x, p1.y);
+                        ctx.lineTo(p2.x, p2.y);
+                        ctx.strokeStyle = `rgba(0, 212, 255, ${0.1 * (1 - dist / 150)})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.stroke();
+                    }
+                });
+            });
+            
+            requestAnimationFrame(animate);
+        }
+        
+        window.addEventListener('resize', () => {
+            resize();
+            initParticles();
+        });
+        
+        resize();
+        initParticles();
+        animate();
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
