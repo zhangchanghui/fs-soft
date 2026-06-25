@@ -1,0 +1,1421 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>总包项目施工质量管理系统 - FSsoft</title>
+    <style>
+        :root {
+            --blue: #1f5eff;
+            --blue-strong: #174ee8;
+            --blue-dark: #0b2346;
+            --blue-soft: #eef4ff;
+            --secondary: #7c3aed;
+            --text: #1f2d3d;
+            --muted: #7a8798;
+            --line: #d8e4f2;
+            --bg: #ffffff;
+            --section: #f4f8fc;
+            --card: #ffffff;
+            --shadow: 0 16px 38px rgba(30, 73, 120, 0.12);
+            --content: 980px;
+        }
+
+        body.theme-dark {
+            --blue: #00d4ff;
+            --blue-strong: #00a8d4;
+            --blue-dark: #102a46;
+            --blue-soft: rgba(0, 212, 255, 0.12);
+            --secondary: #7c3aed;
+            --text: #eff6ff;
+            --muted: #a8b6c8;
+            --line: rgba(172, 190, 216, 0.18);
+            --bg: #101826;
+            --section: #142033;
+            --card: #1b2a3d;
+            --shadow: 0 18px 46px rgba(0, 0, 0, 0.24);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: "Microsoft YaHei", "Noto Sans SC", Arial, sans-serif;
+            overflow-x: hidden;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        img {
+            display: block;
+            max-width: 100%;
+        }
+
+        .container {
+            width: min(var(--content), calc(100% - 40px));
+            margin: 0 auto;
+        }
+
+        .site-nav {
+            position: fixed;
+            z-index: 80;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 18px 0;
+            transition: opacity 0.26s ease, transform 0.35s ease, padding 0.35s ease;
+        }
+
+        .site-nav-shell {
+            width: min(1180px, calc(100% - 48px));
+            min-height: 58px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 22px;
+            padding: 0 22px;
+            border: 1px solid rgba(192, 211, 233, 0.85);
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.94);
+            box-shadow: 0 18px 45px rgba(30, 73, 120, 0.12);
+            backdrop-filter: blur(14px);
+            transition: width 0.35s ease, border-radius 0.35s ease, background 0.35s ease;
+        }
+
+        body.theme-dark .site-nav-shell {
+            background: rgba(16, 24, 38, 0.9);
+            border-color: rgba(172, 190, 216, 0.18);
+        }
+
+        .site-nav.scrolled {
+            padding: 0;
+        }
+
+        .site-nav.scrolled .site-nav-shell {
+            width: 100%;
+            border-radius: 0;
+            border-left: 0;
+            border-right: 0;
+            border-top: 0;
+        }
+
+        body.project-nav-primary .site-nav {
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(-100%);
+        }
+
+        .logo {
+            width: 116px;
+            height: auto;
+        }
+
+        .site-links {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            color: #2d405d;
+            font-size: 14px;
+        }
+
+        body.theme-dark .site-links {
+            color: #dbe7f6;
+        }
+
+        .site-links a:hover,
+        .product-menu:hover > a {
+            color: var(--blue);
+        }
+
+        .product-menu {
+            position: relative;
+            padding: 20px 0;
+            margin: -20px 0;
+        }
+
+        .product-menu > a {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .product-menu-panel {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            width: 168px;
+            padding: 8px;
+            border-radius: 14px;
+            border: 1px solid var(--line);
+            background: var(--card);
+            box-shadow: var(--shadow);
+            transform: translate(-50%, 8px);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.24s ease;
+        }
+
+        .product-menu:hover .product-menu-panel {
+            opacity: 1;
+            visibility: visible;
+            transform: translate(-50%, 0);
+        }
+
+        .product-menu-panel a {
+            display: block;
+            padding: 9px 12px;
+            border-radius: 10px;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .product-menu-panel a:hover {
+            color: var(--blue);
+            background: var(--blue-soft);
+        }
+
+        .site-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .theme-toggle,
+        .nav-ghost,
+        .nav-primary,
+        .language-switch {
+            min-height: 36px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            background: transparent;
+            color: var(--text);
+            padding: 0 14px;
+            font: inherit;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .theme-toggle:hover,
+        .nav-ghost:hover {
+            color: var(--blue);
+            border-color: var(--blue);
+        }
+
+        .nav-primary {
+            border-color: var(--blue);
+            color: #ffffff;
+            background: linear-gradient(90deg, var(--blue), var(--secondary));
+            box-shadow: 0 12px 26px rgba(31, 94, 255, 0.24);
+        }
+
+        .theme-dot {
+            width: 8px;
+            height: 8px;
+            margin-right: 8px;
+            border-radius: 999px;
+            background: var(--blue);
+        }
+
+        .language-switch {
+            padding: 3px;
+            gap: 2px;
+        }
+
+        .language-switch span {
+            min-width: 28px;
+            height: 26px;
+            display: grid;
+            place-items: center;
+            border-radius: 999px;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .language-switch .active {
+            color: #ffffff;
+            background: var(--blue);
+        }
+
+        .hero {
+            height: 438px;
+            padding-top: 86px;
+            background: var(--section);
+        }
+
+        .hero-panel {
+            position: relative;
+            height: 352px;
+            overflow: hidden;
+            background: url("assets/quality-ga/hero-banner.png") center/cover no-repeat;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            height: 100%;
+            display: flex;
+            align-items: center;
+        }
+
+        .hero-copy {
+            width: 460px;
+            color: #ffffff;
+        }
+
+        .hero-copy h1 {
+            margin: 0 0 26px;
+            color: #ffffff;
+            font-size: 42px;
+            line-height: 1.34;
+            font-weight: 700;
+            letter-spacing: 0;
+        }
+
+        .hero-copy p {
+            margin: 0;
+            width: 410px;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 15px;
+            line-height: 1.85;
+        }
+
+        .project-nav {
+            position: sticky;
+            top: 76px;
+            z-index: 60;
+            margin-top: -27px;
+            transition: top 0.32s ease;
+        }
+
+        .project-nav-inner {
+            height: 54px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px 0 0;
+            border-radius: 3px;
+            background: var(--blue-dark);
+            box-shadow: 0 10px 28px rgba(11, 35, 70, 0.18);
+            transition: border-radius 0.32s ease, background 0.32s ease, box-shadow 0.32s ease, height 0.32s ease;
+        }
+
+        .project-links {
+            height: 100%;
+            display: flex;
+            align-items: stretch;
+        }
+
+        .project-links a {
+            min-width: 112px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.86);
+            font-size: 13px;
+        }
+
+        .project-links a:hover,
+        .project-links a.active {
+            color: #ffffff;
+            background: var(--blue);
+        }
+
+        .project-nav .consult-button {
+            min-width: 98px;
+            height: 30px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 999px;
+            color: #ffffff;
+            background: linear-gradient(90deg, var(--blue), var(--secondary));
+            font-size: 13px;
+        }
+
+        body.project-nav-primary .project-nav {
+            top: 16px;
+        }
+
+        body.project-nav-primary .project-nav-inner {
+            height: 78px;
+            padding: 0 16px 0 26px;
+            border: 1px solid #c8dcf4;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.94);
+            box-shadow: 0 18px 42px rgba(21, 52, 94, 0.14);
+            backdrop-filter: blur(14px);
+        }
+
+        body.project-nav-primary .project-links {
+            gap: 26px;
+        }
+
+        body.project-nav-primary .project-links a {
+            min-width: auto;
+            padding: 0 8px;
+            color: #4f6079;
+            font-size: 15px;
+            background: transparent;
+        }
+
+        body.project-nav-primary .project-links a:hover,
+        body.project-nav-primary .project-links a.active {
+            color: var(--blue);
+            background: transparent;
+        }
+
+        body.project-nav-primary .project-nav .consult-button {
+            min-width: 116px;
+            height: 48px;
+            font-size: 15px;
+            background: linear-gradient(90deg, var(--blue), var(--secondary));
+            box-shadow: 0 12px 26px rgba(31, 94, 255, 0.22);
+        }
+
+        body.theme-dark.project-nav-primary .project-nav-inner {
+            border-color: rgba(0, 212, 255, 0.22);
+            background: rgba(17, 35, 58, 0.94);
+            box-shadow: 0 18px 42px rgba(0, 0, 0, 0.26);
+        }
+
+        body.theme-dark.project-nav-primary .project-links a {
+            color: #d6e3f2;
+        }
+
+        body.theme-dark.project-nav-primary .project-links a:hover,
+        body.theme-dark.project-nav-primary .project-links a.active {
+            color: var(--blue);
+        }
+
+        .section {
+            padding: 72px 0;
+            background: var(--bg);
+        }
+
+        .section.alt {
+            background: var(--section);
+        }
+
+        .section-title {
+            margin-bottom: 38px;
+            text-align: center;
+        }
+
+        .section-title h2 {
+            margin: 0 0 8px;
+            color: var(--blue);
+            font-size: 26px;
+            font-weight: 700;
+        }
+
+        .section-title p {
+            margin: 0;
+            color: #c4ccd6;
+            font-size: 13px;
+        }
+
+        body.theme-dark .section-title p {
+            color: var(--muted);
+        }
+
+        .pain-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 38px;
+        }
+
+        .pain-card {
+            border: 1px solid #edf1f6;
+            background: var(--card);
+            box-shadow: 0 8px 20px rgba(30, 73, 120, 0.04);
+        }
+
+        body.theme-dark .pain-card {
+            border-color: var(--line);
+        }
+
+        .pain-card img {
+            width: 100%;
+            aspect-ratio: 320 / 277;
+            object-fit: cover;
+        }
+
+        .pain-text {
+            min-height: 106px;
+            padding: 17px 16px 20px;
+            transition: background-color 0.2s ease;
+        }
+
+        .pain-card h3 {
+            margin: 0 0 8px;
+            color: var(--text);
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .pain-card p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.7;
+            transition: color 0.2s ease;
+        }
+
+        .pain-card h3 {
+            transition: color 0.2s ease;
+        }
+
+        .pain-card:hover .pain-text {
+            background: var(--blue);
+        }
+
+        .pain-card:hover h3,
+        .pain-card:hover p {
+            color: #ffffff;
+        }
+
+        .advantage-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 28px 58px;
+        }
+
+        .advantage-item {
+            display: grid;
+            grid-template-columns: 48px 1fr;
+            gap: 16px;
+            align-items: start;
+        }
+
+        .adv-icon {
+            width: 42px;
+            height: 42px;
+            display: grid;
+            place-items: center;
+            border: 4px solid #d7e8fa;
+            border-radius: 50%;
+            color: var(--blue);
+            background: #ffffff;
+        }
+
+        body.theme-dark .adv-icon {
+            background: var(--card);
+            border-color: rgba(0, 212, 255, 0.18);
+        }
+
+        .advantage-item h3 {
+            margin: 0 0 7px;
+            color: var(--text);
+            font-size: 18px;
+        }
+
+        .advantage-item p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.8;
+        }
+
+        .function-list {
+            display: grid;
+            gap: 58px;
+        }
+
+        .function-row {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 46px;
+            align-items: center;
+        }
+
+        .function-row.reverse {
+            grid-template-columns: 0.9fr 1.1fr;
+        }
+
+        .function-row.reverse .function-image {
+            order: 2;
+        }
+
+        .function-image img {
+            width: 100%;
+            border-radius: 18px;
+        }
+
+        .function-copy h3 {
+            margin: 0 0 20px;
+            color: var(--text);
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .function-copy ul {
+            margin: 0 0 28px;
+            padding: 0;
+            list-style: none;
+        }
+
+        .function-copy li {
+            position: relative;
+            margin-bottom: 15px;
+            padding-left: 18px;
+            color: #333f4f;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        body.theme-dark .function-copy li {
+            color: var(--muted);
+        }
+
+        .function-copy li::before {
+            content: "";
+            position: absolute;
+            top: 0.82em;
+            left: 0;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: #4d5a69;
+        }
+
+        .demo-button {
+            width: 110px;
+            height: 34px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 999px;
+            color: #ffffff;
+            background: linear-gradient(90deg, var(--blue), var(--secondary));
+            border: 0;
+            font: inherit;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .value-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 38px 58px;
+        }
+
+        .value-card {
+            position: relative;
+            height: 236px;
+            overflow: hidden;
+            background: var(--card);
+        }
+
+        .value-card img {
+            width: 100%;
+            height: 190px;
+            object-fit: cover;
+        }
+
+        .value-label {
+            height: 46px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text);
+            background: #ffffff;
+            font-size: 16px;
+            transition: color 0.2s ease, background-color 0.2s ease, font-weight 0.2s ease;
+        }
+
+        .value-card:hover .value-label {
+            color: #ffffff;
+            background: var(--blue);
+            font-weight: 700;
+        }
+
+        .trust {
+            color: #ffffff;
+            background: #0b2346;
+        }
+
+        .trust-hero {
+            height: 370px;
+            padding: 54px 0 0;
+            background:
+                linear-gradient(180deg, rgba(11, 35, 70, 0.48), rgba(31, 94, 255, 0.58)),
+                url("assets/quality-ga/trust-bg.png") center/cover no-repeat;
+        }
+
+        .trust-title {
+            text-align: center;
+        }
+
+        .trust-title h2 {
+            margin: 0;
+            color: #ffffff;
+            font-size: 32px;
+            line-height: 1.2;
+            font-weight: 700;
+            letter-spacing: 0;
+        }
+
+        .trust-title p {
+            margin: 12px 0 0;
+            color: rgba(255, 255, 255, 0.82);
+            font-size: 14px;
+        }
+
+        .trust-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 62px;
+            width: min(900px, 100%);
+            margin: 72px auto 0;
+            text-align: center;
+        }
+
+        .trust-stat img {
+            width: 34px;
+            height: 34px;
+            margin: 0 auto 15px;
+            object-fit: contain;
+            filter: brightness(0) invert(1);
+            opacity: 0.9;
+        }
+
+        .trust-stat strong {
+            display: block;
+            font-size: 46px;
+            line-height: 1;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+
+        .trust-stat span {
+            display: block;
+            margin-top: 12px;
+            color: rgba(255, 255, 255, 0.86);
+            font-size: 12px;
+        }
+
+        .map-section {
+            height: clamp(390px, 30.42vw, 620px);
+            position: relative;
+            background:
+                linear-gradient(180deg, rgba(31, 94, 255, 0.08), rgba(31, 94, 255, 0.08)),
+                url("assets/quality-ga/map-bg.png") center top/cover no-repeat;
+            overflow: hidden;
+        }
+
+        .map-section::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 4px;
+            background:
+                linear-gradient(90deg, transparent calc(50% - 32px), #ff7f28 calc(50% - 32px), #ff7f28 calc(50% + 32px), transparent calc(50% + 32px)),
+                #ffffff;
+        }
+
+        .map-locations {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center top;
+            pointer-events: none;
+        }
+
+        .footer {
+            background: #ffffff;
+            color: #8a94a3;
+            font-size: 12px;
+        }
+
+        body.theme-dark .footer {
+            background: #101826;
+        }
+
+        .footer-main {
+            min-height: 112px;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 24px;
+            align-items: center;
+            border-bottom: 1px solid #edf1f5;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 36px;
+            margin-bottom: 18px;
+            color: #4b5668;
+        }
+
+        body.theme-dark .footer-links {
+            color: var(--muted);
+        }
+
+        .footer-info {
+            display: grid;
+            gap: 8px;
+        }
+
+        .footer-qr {
+            width: 74px;
+            height: 82px;
+            object-fit: contain;
+        }
+
+        .copyright {
+            padding: 16px 0;
+            text-align: center;
+            background: #eeeeee;
+            color: #8a8f98;
+        }
+
+        body.theme-dark .copyright {
+            background: #0c1320;
+        }
+
+        .floating-tools {
+            position: fixed;
+            z-index: 70;
+            right: 31px;
+            top: 50%;
+            display: grid;
+            gap: 18px;
+            transform: translateY(-50%);
+        }
+
+        .float-item {
+            position: relative;
+        }
+
+        .float-button {
+            width: 58px;
+            height: 58px;
+            display: grid;
+            place-items: center;
+            border: 1px solid #d6e5f6;
+            border-radius: 50%;
+            background: #ffffff;
+            box-shadow: 0 14px 34px rgba(30, 73, 120, 0.15);
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .float-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 18px 40px rgba(30, 73, 120, 0.2);
+        }
+
+        .float-button svg {
+            width: 30px;
+            height: 30px;
+            color: #182848;
+        }
+
+        .demo-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 120;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .demo-modal.is-open {
+            display: flex;
+        }
+
+        .demo-backdrop {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 31, 69, 0.5);
+            backdrop-filter: blur(6px);
+        }
+
+        .demo-dialog {
+            position: relative;
+            width: min(560px, 100%);
+            padding: 30px;
+            border-radius: 18px;
+            background: var(--card);
+            box-shadow: 0 30px 90px rgba(0, 31, 69, 0.28);
+        }
+
+        .demo-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 34px;
+            height: 34px;
+            border: 1px solid var(--line);
+            border-radius: 50%;
+            color: var(--muted);
+            background: transparent;
+            cursor: pointer;
+            font-size: 22px;
+        }
+
+        .demo-dialog h2 {
+            margin: 0 0 10px;
+            color: var(--blue);
+        }
+
+        .demo-dialog p {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.7;
+        }
+
+        .demo-form {
+            display: grid;
+            gap: 15px;
+            margin-top: 22px;
+        }
+
+        .demo-field span {
+            display: block;
+            margin-bottom: 7px;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .demo-field input,
+        .demo-field select,
+        .demo-field textarea {
+            width: 100%;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: var(--bg);
+            color: var(--text);
+            font: inherit;
+            padding: 12px 13px;
+            outline: none;
+        }
+
+        .demo-field textarea {
+            min-height: 96px;
+            resize: vertical;
+        }
+
+        .demo-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        @media (max-width: 980px) {
+            .site-links,
+            .language-switch,
+            .nav-ghost {
+                display: none;
+            }
+
+            .hero {
+                height: auto;
+            }
+
+            .hero-panel {
+                height: 360px;
+            }
+
+            .pain-grid,
+            .advantage-grid,
+            .value-grid,
+            .trust-stats {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .function-row,
+            .function-row.reverse {
+                grid-template-columns: 1fr;
+            }
+
+            .function-row.reverse .function-image {
+                order: 0;
+            }
+
+            .project-nav-inner {
+                height: auto;
+                align-items: flex-start;
+                border-radius: 18px;
+                padding: 12px;
+            }
+
+            .project-links {
+                flex-wrap: wrap;
+            }
+
+            .project-links a {
+                min-width: 96px;
+                height: 34px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                width: calc(100% - 28px);
+            }
+
+            .site-nav-shell {
+                width: calc(100% - 24px);
+                padding: 0 14px;
+            }
+
+            .site-actions .nav-primary {
+                display: none;
+            }
+
+            .hero-copy {
+                width: 100%;
+            }
+
+            .hero-copy h1 {
+                font-size: 32px;
+            }
+
+            .hero-copy p {
+                width: 100%;
+            }
+
+            .pain-grid,
+            .advantage-grid,
+            .value-grid,
+            .trust-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .trust-stat strong {
+                font-size: 36px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav id="site-nav" class="site-nav">
+        <div class="site-nav-shell">
+            <a href="index.html#home" data-home-link aria-label="返回官网首页">
+                <img id="nav-logo" class="logo" src="assets/深色Logo.png" alt="FSsoft Logo">
+            </a>
+            <div class="site-links">
+                <a href="index.html#home" data-home-link>首页</a>
+                <a href="index.html#about">关于我们</a>
+                <div class="product-menu">
+                    <a href="index.html#products" data-product-center-link>产品中心 <span>⌄</span></a>
+                    <div class="product-menu-panel">
+                        <a href="index.html#products" data-product-center-link>菲律宾专区</a>
+                        <a href="index.html#products" data-product-center-link>印尼专区</a>
+                        <a href="index.html#products" data-product-center-link>美洲专区</a>
+                        <a href="index.html#products" data-product-center-link>泰国专区</a>
+                        <a href="index.html#products" data-product-center-link>生产系统</a>
+                        <a href="index.html#products" data-product-center-link>网络运维</a>
+                    </div>
+                </div>
+                <a href="index.html#solutions">解决方案</a>
+                <a href="index.html#global">全球业务</a>
+                <a href="index.html#contact" data-contact-link>联系我们</a>
+            </div>
+            <div class="site-actions">
+                <button id="theme-toggle" class="theme-toggle" type="button"><span class="theme-dot"></span><span id="theme-label">浅色</span></button>
+                <div class="language-switch"><span class="active">中</span><span>EN</span></div>
+                <button class="nav-ghost" type="button" data-demo-trigger>申请演示</button>
+                <a class="nav-primary" href="index.html#contact" data-contact-link>联系我们</a>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <section class="hero" id="top">
+            <div class="hero-panel">
+                <div class="container hero-content">
+                    <div class="hero-copy">
+                        <h1>总包项目施工质量<br>管理系统</h1>
+                        <p>以数字化平台工具赋能，用智能化赋能高效管控与保障施工质量，让每一个项目都成为标杆。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="project-nav" id="project-nav">
+            <div class="container">
+                <div class="project-nav-inner">
+                    <div class="project-links">
+                        <a class="active" href="#pain">行业痛点</a>
+                        <a href="#advantages">核心优势</a>
+                        <a href="#functions">核心功能</a>
+                        <a href="#value">实施价值</a>
+                        <a href="#trust">客户信赖</a>
+                    </div>
+                    <a class="consult-button" href="#consult">合作咨询</a>
+                </div>
+            </div>
+        </div>
+
+        <section class="section" id="pain">
+            <div class="container">
+                <div class="section-title">
+                    <h2>行业痛点</h2>
+                    <p>传统质量管理的四大“拦路虎”</p>
+                </div>
+                <div class="pain-grid">
+                    <article class="pain-card">
+                        <img src="assets/quality-ga/pain-data.png" alt="数据断层难追溯">
+                        <div class="pain-text">
+                            <h3>数据断层难追溯</h3>
+                            <p>人工拍照归档，质量问题追踪慢，项目现场信息分散。</p>
+                        </div>
+                    </article>
+                    <article class="pain-card">
+                        <img src="assets/quality-ga/pain-collab.png" alt="协同沟通不及时">
+                        <div class="pain-text">
+                            <h3>协同沟通不及时</h3>
+                            <p>客户、业主、分包商各方不同步，问题反馈滞后影响交付。</p>
+                        </div>
+                    </article>
+                    <article class="pain-card">
+                        <img src="assets/quality-ga/pain-standard.png" alt="标准执行两张皮">
+                        <div class="pain-text">
+                            <h3>标准执行“两张皮”</h3>
+                            <p>不同项目、不同区域口径不统一，验收标准难以统一落地。</p>
+                        </div>
+                    </article>
+                    <article class="pain-card">
+                        <img src="assets/quality-ga/pain-risk.png" alt="隐患发现马后炮">
+                        <div class="pain-text">
+                            <h3>隐患发现“马后炮”</h3>
+                            <p>质量问题滞后暴露，返工成本高，影响项目交付效率。</p>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="section alt" id="advantages">
+            <div class="container">
+                <div class="section-title">
+                    <h2>核心优势</h2>
+                    <p>四大优势重塑项目质量管理</p>
+                </div>
+                <div class="advantage-grid">
+                    <article class="advantage-item">
+                        <div class="adv-icon">◷</div>
+                        <div>
+                            <h3>全流程数字化，让每一步可追溯</h3>
+                            <p>从施工计划到现场采集、质量审核到整改闭环，流程清晰、数据可追溯、责任可定位。</p>
+                        </div>
+                    </article>
+                    <article class="advantage-item">
+                        <div class="adv-icon">◷</div>
+                        <div>
+                            <h3>灵活适配，贴合多场景需求</h3>
+                            <p>支持市政工程、通信工程等不同项目类型，施工流程可配置，Web 与 APP 协同使用。</p>
+                        </div>
+                    </article>
+                    <article class="advantage-item">
+                        <div class="adv-icon">◷</div>
+                        <div>
+                            <h3>AI 智能质检，高准确率助力作业数据高效采集</h3>
+                            <p>内置 AI 识别能力，帮助现场快速采集和判断，提升数据录入效率与准确性。</p>
+                        </div>
+                    </article>
+                    <article class="advantage-item">
+                        <div class="adv-icon">◷</div>
+                        <div>
+                            <h3>多方协同，打破信息壁垒</h3>
+                            <p>客户、业主、分包商和项目团队在线协作，审批、整改、复核状态实时同步。</p>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="functions">
+            <div class="container">
+                <div class="section-title">
+                    <h2>核心功能</h2>
+                    <p>从现场采集到质量闭环全链路支撑</p>
+                </div>
+                <div class="function-list">
+                    <article class="function-row">
+                        <div class="function-image">
+                            <img src="assets/quality-ga/function-smart-inspection.png" alt="智能质检模块">
+                        </div>
+                        <div class="function-copy">
+                            <h3>智能质检模块</h3>
+                            <ul>
+                                <li>现场拍照自动关联施工部位，AI 一键采集基础数据。</li>
+                                <li>指标异常自动预警。</li>
+                            </ul>
+                            <button class="demo-button" type="button" data-demo-trigger>申请演示</button>
+                        </div>
+                    </article>
+                    <article class="function-row reverse">
+                        <div class="function-image">
+                            <img src="assets/quality-ga/function-workflow.png" alt="流程自定义模块">
+                        </div>
+                        <div class="function-copy">
+                            <h3>流程自定义模块</h3>
+                            <ul>
+                                <li>按项目类型，如市政、通信工程，定制专属工序。</li>
+                                <li>检验标准内置系统，自动校验合规性。</li>
+                            </ul>
+                            <button class="demo-button" type="button" data-demo-trigger>申请演示</button>
+                        </div>
+                    </article>
+                    <article class="function-row">
+                        <div class="function-image">
+                            <img src="assets/quality-ga/function-collaboration.png" alt="协同管理模块">
+                        </div>
+                        <div class="function-copy">
+                            <h3>协同管理模块</h3>
+                            <ul>
+                                <li>Web 端审批 + APP 端实时查看，进度、文档、质量数据同步更新。</li>
+                                <li>施工问题在线流转，处理状态可视化追踪。</li>
+                            </ul>
+                            <button class="demo-button" type="button" data-demo-trigger>申请演示</button>
+                        </div>
+                    </article>
+                    <article class="function-row reverse">
+                        <div class="function-image">
+                            <img src="assets/quality-ga/function-data-insight.png" alt="数据洞察模块">
+                        </div>
+                        <div class="function-copy">
+                            <h3>数据洞察模块</h3>
+                            <ul>
+                                <li>自动生成进度报表，覆盖问题统计、完工率、进度。</li>
+                                <li>工序合格率分析，为决策提供数据支撑。</li>
+                            </ul>
+                            <button class="demo-button" type="button" data-demo-trigger>申请演示</button>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="section alt" id="value">
+            <div class="container">
+                <div class="section-title">
+                    <h2>实施价值</h2>
+                    <p>看得见的“降本增效”</p>
+                </div>
+                <div class="value-grid">
+                    <article class="value-card">
+                        <img src="assets/quality-ga/value-cost.png" alt="成本优化">
+                        <div class="value-label">成本优化</div>
+                    </article>
+                    <article class="value-card">
+                        <img src="assets/quality-ga/value-efficiency.png" alt="效率提升">
+                        <div class="value-label">效率提升</div>
+                    </article>
+                    <article class="value-card">
+                        <img src="assets/quality-ga/value-quality.png" alt="质量升级">
+                        <div class="value-label">质量升级</div>
+                    </article>
+                    <article class="value-card">
+                        <img src="assets/quality-ga/value-competition.png" alt="竞争力增强">
+                        <div class="value-label">竞争力增强</div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="trust" id="trust">
+            <div class="trust-hero">
+                <div class="container">
+                    <div class="trust-title">
+                        <h2>全球 12 国，6000+ 用户的信赖之选</h2>
+                        <p>成功案例：全球 12 国多个项目验证的实战效果</p>
+                    </div>
+                    <div class="trust-stats">
+                        <div class="trust-stat">
+                            <img src="assets/quality-ga/icon-site.png" alt="">
+                            <strong>2600+</strong>
+                            <span>覆盖站点</span>
+                        </div>
+                        <div class="trust-stat">
+                            <img src="assets/quality-ga/icon-doc.png" alt="">
+                            <strong>750000+</strong>
+                            <span>采集作业文档</span>
+                        </div>
+                        <div class="trust-stat">
+                            <img src="assets/quality-ga/icon-identify.png" alt="">
+                            <strong>40%↑</strong>
+                            <span>问题识别效率</span>
+                        </div>
+                        <div class="trust-stat">
+                            <img src="assets/quality-ga/icon-quality-project.png" alt="">
+                            <strong>28%↑</strong>
+                            <span>优质工程占比</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="map-section">
+                <img class="map-locations" src="assets/quality-ga/map-locations.png" alt="全球项目分布">
+            </div>
+        </section>
+
+        <section class="footer" id="consult">
+            <div class="container footer-main">
+                <div>
+                    <div class="footer-links">
+                        <a href="index.html#about">关于我们</a>
+                        <a href="index.html#products">服务中心</a>
+                        <a href="index.html#products">产品中心</a>
+                        <a href="index.html#global">服务与支持</a>
+                        <a href="index.html#global">企业社会责任</a>
+                        <a href="index.html#contact">联系我们</a>
+                    </div>
+                    <div class="footer-info">
+                        <span>地址：湖北省武汉市东湖高新区高新四路 6 号烽火科技园</span>
+                        <span>电话：027-87654321　邮箱：service@fiberhome.com</span>
+                    </div>
+                </div>
+                <img class="footer-qr" src="assets/quality-ga/公众号二维码.png" alt="公众号二维码">
+            </div>
+            <div class="copyright">Copyright © FiberHome 2024. All Rights Reserved.</div>
+        </section>
+    </main>
+
+    <div class="floating-tools">
+        <div class="float-item">
+            <button class="float-button" type="button" aria-label="点击咨询" data-demo-trigger>
+                <svg viewBox="0 0 32 32" aria-hidden="true">
+                    <path d="M8.8 22.1c-2.6-1.7-4.2-4.2-4.2-7 0-5.3 5.2-9.6 11.6-9.6s11.6 4.3 11.6 9.6-5.2 9.6-11.6 9.6c-1.2 0-2.3-.1-3.4-.5l-5 2.5 1-4.6Z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M11.7 15.3h.1M16 15.3h.1M20.3 15.3h.1" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                </svg>
+            </button>
+        </div>
+        <div class="float-item">
+            <button class="float-button" type="button" aria-label="回到顶部" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+                <svg viewBox="0 0 32 32" aria-hidden="true">
+                    <path d="M16 26V7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M8.5 14.5 16 7l7.5 7.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <div id="demo-modal" class="demo-modal" role="dialog" aria-modal="true" aria-hidden="true">
+        <div class="demo-backdrop" data-demo-close></div>
+        <div class="demo-dialog">
+            <button class="demo-close" type="button" data-demo-close aria-label="关闭">×</button>
+            <h2>申请产品演示</h2>
+            <p>请留下联系信息和关注场景，我们会尽快安排总包项目施工质量管理系统能力介绍与演示沟通。</p>
+            <form class="demo-form">
+                <label class="demo-field">
+                    <span>姓名</span>
+                    <input type="text" placeholder="请输入您的姓名">
+                </label>
+                <label class="demo-field">
+                    <span>联系方式</span>
+                    <input type="text" placeholder="手机号 / 邮箱">
+                </label>
+                <label class="demo-field">
+                    <span>关注产品 / 场景</span>
+                    <select>
+                        <option>总包项目施工质量管理系统</option>
+                        <option>智能质检模块</option>
+                        <option>流程自定义模块</option>
+                        <option>协同管理模块</option>
+                        <option>数据洞察模块</option>
+                    </select>
+                </label>
+                <label class="demo-field">
+                    <span>需求说明</span>
+                    <textarea placeholder="请简单描述希望了解的产品能力或项目场景"></textarea>
+                </label>
+                <div class="demo-actions">
+                    <button class="nav-ghost" type="button" data-demo-close>取消</button>
+                    <button class="nav-primary" type="submit">提交申请</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const siteNav = document.getElementById('site-nav');
+        const projectLinks = [...document.querySelectorAll('.project-links a')];
+        const sections = projectLinks
+            .map((link) => document.querySelector(link.getAttribute('href')))
+            .filter(Boolean);
+
+        function updateNavigationState() {
+            siteNav.classList.toggle('scrolled', window.scrollY > 1);
+            document.body.classList.toggle('project-nav-primary', window.scrollY >= window.innerHeight);
+
+            const activeSection = [...sections].reverse().find((section) => section.offsetTop <= window.scrollY + 120);
+            if (activeSection) {
+                projectLinks.forEach((link) => {
+                    link.classList.toggle('active', link.getAttribute('href') === `#${activeSection.id}`);
+                });
+            }
+        }
+
+        window.addEventListener('scroll', updateNavigationState, { passive: true });
+        window.addEventListener('resize', updateNavigationState);
+        updateNavigationState();
+
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeLabel = document.getElementById('theme-label');
+        const navLogo = document.getElementById('nav-logo');
+
+        function applyTheme(theme) {
+            const isDark = theme === 'dark';
+            document.body.classList.toggle('theme-dark', isDark);
+            themeLabel.textContent = isDark ? '深色' : '浅色';
+            navLogo.src = isDark ? 'assets/浅色Logo.png' : 'assets/深色Logo.png';
+        }
+
+        const themeParam = new URLSearchParams(window.location.search).get('theme');
+        applyTheme(themeParam === 'dark' ? 'dark' : 'light');
+
+        themeToggle.addEventListener('click', () => {
+            applyTheme(document.body.classList.contains('theme-dark') ? 'light' : 'dark');
+        });
+
+        const demoModal = document.getElementById('demo-modal');
+        function openDemoModal(event) {
+            event?.preventDefault();
+            demoModal.classList.add('is-open');
+            demoModal.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeDemoModal() {
+            demoModal.classList.remove('is-open');
+            demoModal.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = '';
+        }
+
+        document.querySelectorAll('[data-demo-trigger]').forEach((trigger) => trigger.addEventListener('click', openDemoModal));
+        document.querySelectorAll('[data-demo-close]').forEach((trigger) => trigger.addEventListener('click', closeDemoModal));
+        demoModal.querySelector('form').addEventListener('submit', (event) => {
+            event.preventDefault();
+            closeDemoModal();
+        });
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && demoModal.classList.contains('is-open')) {
+                closeDemoModal();
+            }
+        });
+    </script>
+</body>
+</html>
