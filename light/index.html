@@ -828,7 +828,7 @@
                     </div>
 
                     <!-- Product 2 -->
-                    <a href="../quality-ga.html" class="glass-card rounded-2xl overflow-hidden group cursor-pointer block" aria-label="查看现场作业质量管理系统方案">
+                    <a href="quality-ga.html" class="glass-card rounded-2xl overflow-hidden group cursor-pointer block" aria-label="查看现场作业质量管理系统方案">
                         <div class="h-56 bg-gradient-to-br from-blue-900/30 to-zeekr-card relative overflow-hidden p-6 flex flex-col justify-end">
                             <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=600&h=400&fit=crop')] bg-cover bg-center opacity-30 group-hover:opacity-50 transition-opacity"></div>
                             <div class="absolute top-4 right-4 w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center">
@@ -1736,7 +1736,7 @@
                 const tone = toneClass[product.tone] || toneClass.cyan;
                 const tags = product.tags.map(tag => `<span class="product-badge px-3 py-1 rounded-full text-zeekr-accent text-xs">${tag}</span>`).join('');
                 const cardTag = product.link ? 'a' : 'div';
-                const cardAttrs = product.link ? `href="${product.link}" aria-label="查看${product.title}方案"` : '';
+                const cardAttrs = product.link ? `href="/fs-soft/${product.link}" aria-label="查看${product.title}方案"` : '';
 
                 return `
                     <${cardTag} ${cardAttrs} class="glass-card rounded-2xl overflow-hidden group cursor-pointer block">
