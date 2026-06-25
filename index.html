@@ -145,6 +145,18 @@
                 inset 0 1px 0 rgba(255, 255, 255, 0.06);
         }
 
+        #navbar,
+        #navbar > div,
+        .nav-shell {
+            transition:
+                padding 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+                max-width 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+                border-radius 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+                background 0.45s ease,
+                box-shadow 0.45s ease,
+                border-color 0.45s ease;
+        }
+
         #navbar.scrolled .nav-shell {
             background:
                 linear-gradient(135deg, rgba(0, 212, 255, 0.12), transparent 30%),
@@ -157,6 +169,29 @@
                 inset 0 1px 0 rgba(255, 255, 255, 0.08);
         }
 
+        #navbar.scrolled {
+            top: 0;
+        }
+
+        #navbar.scrolled > div {
+            max-width: 100% !important;
+            width: 100%;
+            padding: 0 !important;
+        }
+
+        #navbar.scrolled .nav-shell {
+            border-top: 0;
+            border-left: 0;
+            border-right: 0;
+            border-radius: 0;
+        }
+
+        @media (max-width: 768px) {
+            #navbar.scrolled > div {
+                padding: 0 !important;
+            }
+        }
+
         .language-switch {
             background: rgba(255, 255, 255, 0.025);
             border: 1px solid rgba(255, 255, 255, 0.05);
@@ -167,6 +202,25 @@
             background: rgba(0, 212, 255, 0.12);
             color: rgba(255, 255, 255, 0.9);
             box-shadow: none;
+        }
+
+        .theme-toggle-button {
+            background: rgba(255, 255, 255, 0.025);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            color: rgba(229, 229, 229, 0.88);
+        }
+
+        .theme-toggle-button:hover {
+            border-color: rgba(0, 212, 255, 0.22);
+            color: #00d4ff;
+        }
+
+        .theme-toggle-dot {
+            width: 0.55rem;
+            height: 0.55rem;
+            border-radius: 999px;
+            background: #00d4ff;
+            box-shadow: 0 0 14px rgba(0, 212, 255, 0.55);
         }
 
         .nav-link {
@@ -330,6 +384,283 @@
             background: rgba(0, 212, 255, 0.3);
             color: #fff;
         }
+
+        /* Light theme */
+        body.theme-light {
+            background:
+                radial-gradient(circle at 18% 6%, rgba(31, 94, 255, 0.11), transparent 28%),
+                radial-gradient(circle at 88% 16%, rgba(15, 141, 232, 0.11), transparent 30%),
+                linear-gradient(180deg, #ffffff 0%, #f6f9fe 44%, #eef4fb 100%);
+            background-color: #f6f9fe;
+            color: #172b4d;
+        }
+
+        body.theme-light .text-white {
+            color: #071b3d !important;
+        }
+
+        body.theme-light .text-zeekr-text {
+            color: #172b4d !important;
+        }
+
+        body.theme-light .text-zeekr-text\/80 {
+            color: rgba(23, 43, 77, 0.8) !important;
+        }
+
+        body.theme-light .text-zeekr-muted {
+            color: #65758b !important;
+        }
+
+        body.theme-light .text-zeekr-muted\/70 {
+            color: rgba(101, 117, 139, 0.7) !important;
+        }
+
+        body.theme-light .border-zeekr-border,
+        body.theme-light .border-zeekr-border\/70 {
+            border-color: #dbe5f2 !important;
+        }
+
+        body.theme-light .bg-zeekr-dark {
+            background: #f2f6fb !important;
+        }
+
+        body.theme-light .bg-zeekr-card {
+            background: #ffffff !important;
+        }
+
+        body.theme-light .bg-zeekr-black {
+            background: #0b2346 !important;
+        }
+
+        body.theme-light .bg-zeekr-black\/60 {
+            background: #f8fbff !important;
+        }
+
+        body.theme-light .glass {
+            background: rgba(255, 255, 255, 0.82);
+            border-color: rgba(211, 223, 239, 0.9);
+            box-shadow: 0 16px 40px rgba(21, 52, 94, 0.08);
+        }
+
+        body.theme-light .glass-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-color: rgba(215, 226, 241, 0.95);
+            box-shadow: 0 18px 42px rgba(21, 52, 94, 0.08);
+        }
+
+        body.theme-light .glass-card:hover {
+            border-color: rgba(31, 94, 255, 0.28);
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: 0 24px 56px rgba(21, 52, 94, 0.14), 0 0 30px rgba(31, 94, 255, 0.08);
+        }
+
+        body.theme-light .neon-text {
+            text-shadow: none;
+        }
+
+        body.theme-light .nav-shell {
+            background:
+                linear-gradient(135deg, rgba(31, 94, 255, 0.05), transparent 34%),
+                linear-gradient(315deg, rgba(15, 141, 232, 0.05), transparent 38%),
+                rgba(255, 255, 255, 0.88);
+            border-color: rgba(215, 226, 241, 0.95);
+            box-shadow:
+                0 18px 42px rgba(21, 52, 94, 0.1),
+                0 42px 110px rgba(31, 94, 255, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.92);
+        }
+
+        body.theme-light #navbar.scrolled .nav-shell {
+            background:
+                linear-gradient(135deg, rgba(31, 94, 255, 0.06), transparent 30%),
+                linear-gradient(315deg, rgba(15, 141, 232, 0.06), transparent 34%),
+                rgba(255, 255, 255, 0.96);
+            border-color: rgba(31, 94, 255, 0.16);
+            box-shadow:
+                0 20px 46px rgba(21, 52, 94, 0.14),
+                0 50px 120px rgba(31, 94, 255, 0.12),
+                inset 0 1px 0 rgba(255, 255, 255, 0.96);
+        }
+
+        body.theme-light .language-switch,
+        body.theme-light .theme-toggle-button {
+            background: rgba(239, 245, 252, 0.9);
+            border-color: rgba(215, 226, 241, 0.95);
+            color: #172b4d;
+        }
+
+        body.theme-light .language-option.active {
+            background: #1f5eff;
+            color: #ffffff;
+            box-shadow: 0 8px 18px rgba(31, 94, 255, 0.2);
+        }
+
+        body.theme-light .theme-toggle-dot {
+            background: #1f5eff;
+            box-shadow: 0 0 14px rgba(31, 94, 255, 0.28);
+        }
+
+        body.theme-light .nav-dropdown {
+            background:
+                linear-gradient(135deg, rgba(31, 94, 255, 0.07), transparent 36%),
+                rgba(255, 255, 255, 0.96);
+            border-color: rgba(31, 94, 255, 0.12);
+            box-shadow: 0 22px 60px rgba(21, 52, 94, 0.16);
+        }
+
+        body.theme-light .hero-stat-card {
+            background:
+                radial-gradient(circle at 22% 18%, rgba(31, 94, 255, 0.12), transparent 34%),
+                radial-gradient(circle at 82% 82%, rgba(15, 141, 232, 0.12), transparent 36%),
+                linear-gradient(145deg, rgba(255, 255, 255, 0.98), rgba(244, 248, 253, 0.96));
+            border-color: rgba(31, 94, 255, 0.16);
+            box-shadow:
+                0 18px 44px rgba(21, 52, 94, 0.12),
+                inset 0 1px 0 rgba(255, 255, 255, 0.95),
+                inset 0 0 36px rgba(31, 94, 255, 0.06);
+        }
+
+        body.theme-light .product-badge {
+            border-color: rgba(31, 94, 255, 0.16);
+            background: rgba(31, 94, 255, 0.08);
+        }
+
+        body.theme-light .grid-bg {
+            background-image:
+                linear-gradient(rgba(31, 94, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(31, 94, 255, 0.05) 1px, transparent 1px);
+        }
+
+        body.theme-light .orb {
+            opacity: 0.08;
+        }
+
+        body.theme-light .product-tab {
+            border: 1px solid rgba(215, 226, 241, 0.95);
+            background: rgba(255, 255, 255, 0.86);
+            color: #65758b;
+        }
+
+        body.theme-light .product-tab:hover {
+            border-color: rgba(31, 94, 255, 0.28);
+            color: #1f5eff !important;
+            background: #ffffff;
+        }
+
+        body.theme-light .product-tab.active {
+            color: #ffffff !important;
+            border-color: #1f5eff;
+            background: #1f5eff;
+            box-shadow: 0 12px 26px rgba(31, 94, 255, 0.2);
+        }
+
+        body.theme-light .capital-cursor {
+            background: #1f5eff;
+            box-shadow:
+                0 0 16px rgba(31, 94, 255, 0.55),
+                0 0 36px rgba(31, 94, 255, 0.28),
+                0 0 72px rgba(31, 94, 255, 0.16);
+        }
+
+        body.theme-light #home {
+            background:
+                radial-gradient(circle at 50% 16%, rgba(31, 94, 255, 0.1), transparent 34%),
+                linear-gradient(180deg, #ffffff 0%, #f8fbff 58%, #eef4fb 100%);
+        }
+
+        body.theme-light [class*="from-zeekr-accent"][class*="text-white"],
+        body.theme-light [class*="from-zeekr-accent"] .text-white,
+        body.theme-light [class*="from-blue-600"][class*="text-white"],
+        body.theme-light [class*="bg-gradient-to-br"] .text-white,
+        body.theme-light footer .text-white {
+            color: #ffffff !important;
+        }
+
+        body.theme-light #about .aspect-video > .absolute.inset-0 {
+            background: linear-gradient(to top, rgba(8, 31, 67, 0.62), transparent) !important;
+        }
+
+        body.theme-light #about .aspect-video .absolute.bottom-6 .text-white,
+        body.theme-light .glass-card > .h-56 .text-white {
+            color: #ffffff !important;
+        }
+
+        body.theme-light .glass-card > .h-56 {
+            background: linear-gradient(145deg, #0b2346, #143a74) !important;
+            isolation: isolate;
+        }
+
+        body.theme-light .glass-card > .h-56::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+            background: linear-gradient(180deg, rgba(8, 31, 67, 0.18), rgba(8, 31, 67, 0.8));
+        }
+
+        body.theme-light .glass-card > .h-56 > .absolute,
+        body.theme-light .glass-card > .h-56 > .relative {
+            z-index: 2;
+        }
+
+        body.theme-light #solutions,
+        body.theme-light #global {
+            background:
+                radial-gradient(circle at 12% 10%, rgba(31, 94, 255, 0.08), transparent 30%),
+                linear-gradient(180deg, #f4f8fd 0%, #edf4fb 100%) !important;
+        }
+
+        body.theme-light #global .bg-white\/\[0\.02\] {
+            background: rgba(255, 255, 255, 0.72) !important;
+        }
+
+        body.theme-light footer {
+            background:
+                radial-gradient(circle at 18% 0%, rgba(31, 94, 255, 0.2), transparent 32%),
+                #0b2346 !important;
+            color: #d9e6f8;
+        }
+
+        body.theme-light footer .text-zeekr-muted {
+            color: #aebfda !important;
+        }
+
+        body.theme-light footer .border-zeekr-border {
+            border-color: rgba(255, 255, 255, 0.12) !important;
+        }
+
+        body.theme-light #demo-modal .absolute.inset-0 {
+            background: rgba(8, 31, 67, 0.46) !important;
+        }
+
+        body.theme-light #demo-modal input,
+        body.theme-light #demo-modal select,
+        body.theme-light #demo-modal textarea {
+            background: #f8fbff !important;
+            color: #071b3d !important;
+            border-color: #dbe5f2 !important;
+        }
+
+        body.theme-light #demo-modal input::placeholder,
+        body.theme-light #demo-modal textarea::placeholder {
+            color: #8da0ba;
+        }
+
+        body.theme-light a:focus-visible,
+        body.theme-light button:focus-visible,
+        body.theme-light input:focus-visible,
+        body.theme-light select:focus-visible,
+        body.theme-light textarea:focus-visible {
+            outline: 2px solid rgba(31, 94, 255, 0.42);
+            outline-offset: 3px;
+        }
+
+        body.theme-light .nav-dropdown button:hover,
+        body.theme-light .language-option:not(.active):hover,
+        body.theme-light #demo-modal [data-demo-close]:hover {
+            color: #1f5eff !important;
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -367,6 +698,10 @@
                 </div>
 
                 <div class="flex items-center gap-4">
+                    <button id="theme-toggle" type="button" class="theme-toggle-button hidden md:inline-flex items-center gap-2 rounded-full px-3 py-2 text-xs font-medium transition-all" aria-pressed="false" aria-label="切换深浅色">
+                        <span class="theme-toggle-dot"></span>
+                        <span class="theme-toggle-label">深色</span>
+                    </button>
                     <div class="hidden md:flex language-switch rounded-full p-1 text-xs">
                         <button type="button" class="language-option active px-3 py-1 rounded-full font-medium transition-all" data-lang="zh-CN">中</button>
                         <button type="button" class="language-option px-3 py-1 rounded-full text-zeekr-muted hover:text-white transition-all" data-lang="en">EN</button>
@@ -529,17 +864,17 @@
                 <!-- Solution Card 1 -->
                 <article class="glass-card rounded-2xl overflow-hidden group reveal cursor-pointer">
                     <div class="h-48 overflow-hidden relative">
-                        <img src="https://images.unsplash.com/photo-1547658719-da2b51169166?w=600&h=400&fit=crop" alt="Frontend Development" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500">
+                        <img src="https://images.unsplash.com/photo-1547658719-da2b51169166?w=600&h=400&fit=crop" alt="AI Application Service" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500">
                         <div class="absolute top-4 left-4 glass rounded-lg px-3 py-1">
-                            <span class="text-zeekr-accent text-xs font-bold">FRONTEND</span>
+                            <span class="text-zeekr-accent text-xs font-bold">AI SERVICE</span>
                         </div>
                     </div>
                     <div class="p-6">
                         <h3 class="text-white font-bold text-lg mb-3 group-hover:text-zeekr-accent transition-colors line-clamp-2">
-                            前端体验快速构建
+                            AI应用服务
                         </h3>
                         <p class="text-zeekr-muted text-sm leading-relaxed mb-4 line-clamp-3">
-                            基于标准组件、页面模板和可视化看板能力，快速构建工程交付、质量审核、运营分析等业务界面，兼顾效率与用户体验。
+                            聚焦行业场景智能化升级，提供模型应用、智能问答、数据分析与业务流程协同能力，帮助客户提升运营效率与服务体验。
                         </p>
                         <a href="#" class="inline-flex items-center text-zeekr-accent text-sm font-medium hover:gap-2 transition-all gap-1">
                             了解能力
@@ -551,17 +886,17 @@
                 <!-- Solution Card 2 -->
                 <article class="glass-card rounded-2xl overflow-hidden group reveal cursor-pointer" style="transition-delay: 0.1s">
                     <div class="h-48 overflow-hidden relative">
-                        <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600&h=400&fit=crop" alt="Backend Development" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500">
+                        <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600&h=400&fit=crop" alt="Digital Engineering Delivery" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500">
                         <div class="absolute top-4 left-4 glass rounded-lg px-3 py-1">
-                            <span class="text-zeekr-accent text-xs font-bold">BACKEND</span>
+                            <span class="text-zeekr-accent text-xs font-bold">DELIVERY</span>
                         </div>
                     </div>
                     <div class="p-6">
                         <h3 class="text-white font-bold text-lg mb-3 group-hover:text-zeekr-accent transition-colors line-clamp-2">
-                            任意复杂度后端服务开发
+                            工程交付数字化
                         </h3>
                         <p class="text-zeekr-muted text-sm leading-relaxed mb-4 line-clamp-3">
-                            支持 API、流程引擎、权限体系、数据模型和业务规则集成，面向多区域、多角色、多系统协作场景构建稳定服务底座。
+                            覆盖项目计划、施工过程、质量安全、资料归档与进度协同，构建可追踪、可分析、可闭环的工程交付管理体系。
                         </p>
                         <a href="#" class="inline-flex items-center text-zeekr-accent text-sm font-medium hover:gap-2 transition-all gap-1">
                             了解能力
@@ -573,17 +908,17 @@
                 <!-- Solution Card 3 -->
                 <article class="glass-card rounded-2xl overflow-hidden group reveal cursor-pointer" style="transition-delay: 0.2s">
                     <div class="h-48 overflow-hidden relative">
-                        <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&h=400&fit=crop" alt="Application Extension" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500">
+                        <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&h=400&fit=crop" alt="Intelligent Network Operations" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500">
                         <div class="absolute top-4 left-4 glass rounded-lg px-3 py-1">
-                            <span class="text-zeekr-accent text-xs font-bold">EXTENSION</span>
+                            <span class="text-zeekr-accent text-xs font-bold">OPS</span>
                         </div>
                     </div>
                     <div class="p-6">
                         <h3 class="text-white font-bold text-lg mb-3 group-hover:text-zeekr-accent transition-colors line-clamp-2">
-                            应用扩展与系统集成
+                            网络智能运维
                         </h3>
                         <p class="text-zeekr-muted text-sm leading-relaxed mb-4 line-clamp-3">
-                            通过插件化扩展、数据接口和第三方系统集成，快速适配项目交付、网络运维、质量管理等差异化业务场景。
+                            面向网络监控、告警处置、巡检维护和故障定位场景，融合自动化流程与智能分析能力，提升运维响应速度与保障质量。
                         </p>
                         <a href="#" class="inline-flex items-center text-zeekr-accent text-sm font-medium hover:gap-2 transition-all gap-1">
                             了解能力
@@ -847,7 +1182,7 @@
                         </div>
 
                         <!-- Connection Lines SVG -->
-                        <svg class="absolute inset-0 w-full h-full pointer-events-none" style="opacity: 0.3">
+                        <svg class="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 100 100" preserveAspectRatio="none" style="opacity: 0.3">
                             <defs>
                                 <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
                                     <stop offset="0%" style="stop-color:#00d4ff;stop-opacity:0" />
@@ -855,16 +1190,16 @@
                                     <stop offset="100%" style="stop-color:#7c3aed;stop-opacity:0" />
                                 </linearGradient>
                             </defs>
-                            <path d="M 72% 39% Q 68% 46% 76% 51%" stroke="url(#lineGrad)" stroke-width="1" fill="none" stroke-dasharray="5,5">
+                            <path d="M 72 39 Q 68 46 76 51" stroke="url(#lineGrad)" stroke-width="1" fill="none" stroke-dasharray="5,5">
                                 <animate attributeName="stroke-dashoffset" from="0" to="20" dur="2s" repeatCount="indefinite"/>
                             </path>
-                            <path d="M 72% 39% Q 60% 28% 51% 35%" stroke="url(#lineGrad)" stroke-width="1" fill="none" stroke-dasharray="5,5">
+                            <path d="M 72 39 Q 60 28 51 35" stroke="url(#lineGrad)" stroke-width="1" fill="none" stroke-dasharray="5,5">
                                 <animate attributeName="stroke-dashoffset" from="0" to="20" dur="3s" repeatCount="indefinite"/>
                             </path>
-                            <path d="M 72% 39% Q 42% 24% 27% 34%" stroke="url(#lineGrad)" stroke-width="1" fill="none" stroke-dasharray="5,5">
+                            <path d="M 72 39 Q 42 24 27 34" stroke="url(#lineGrad)" stroke-width="1" fill="none" stroke-dasharray="5,5">
                                 <animate attributeName="stroke-dashoffset" from="0" to="20" dur="3.6s" repeatCount="indefinite"/>
                             </path>
-                            <path d="M 72% 39% Q 48% 56% 31% 76%" stroke="url(#lineGrad)" stroke-width="1" fill="none" stroke-dasharray="5,5">
+                            <path d="M 72 39 Q 48 56 31 76" stroke="url(#lineGrad)" stroke-width="1" fill="none" stroke-dasharray="5,5">
                                 <animate attributeName="stroke-dashoffset" from="0" to="20" dur="3s" repeatCount="indefinite"/>
                             </path>
                         </svg>
@@ -1072,11 +1407,50 @@
         // Navbar Scroll Effect
         const navbar = document.getElementById('navbar');
         window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) {
+            if (window.scrollY > 1) {
                 navbar.classList.add('scrolled');
             } else {
                 navbar.classList.remove('scrolled');
             }
+        });
+
+        // Theme switch
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeToggleLabel = themeToggle?.querySelector('.theme-toggle-label');
+        const navLogo = document.querySelector('nav img');
+        const DARK_LOGO = 'assets/浅色Logo.png';
+        const LIGHT_LOGO = 'assets/深色Logo.png';
+
+        function applyTheme(theme) {
+            const isLight = theme === 'light';
+            document.body.classList.toggle('theme-light', isLight);
+            themeToggle?.setAttribute('aria-pressed', String(isLight));
+
+            if (themeToggleLabel) {
+                themeToggleLabel.textContent = isLight ? '浅色' : '深色';
+            }
+
+            if (navLogo) {
+                navLogo.setAttribute('src', isLight ? LIGHT_LOGO : DARK_LOGO);
+            }
+
+            try {
+                localStorage.setItem('fssoft-theme', isLight ? 'light' : 'dark');
+            } catch (error) {
+                // Ignore storage restrictions on local file previews.
+            }
+        }
+
+        let savedTheme = 'dark';
+        try {
+            savedTheme = localStorage.getItem('fssoft-theme') || 'dark';
+        } catch (error) {
+            savedTheme = 'dark';
+        }
+        applyTheme(savedTheme === 'light' ? 'light' : 'dark');
+
+        themeToggle?.addEventListener('click', () => {
+            applyTheme(document.body.classList.contains('theme-light') ? 'dark' : 'light');
         });
 
         // Reveal Animation on Scroll
@@ -1662,6 +2036,10 @@
             width = canvas.width = window.innerWidth;
             height = canvas.height = window.innerHeight;
         }
+
+        function isLightTheme() {
+            return document.body.classList.contains('theme-light');
+        }
         
         class Particle {
             constructor() {
@@ -1684,7 +2062,9 @@
             draw() {
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(0, 212, 255, ${this.opacity})`;
+                ctx.fillStyle = isLightTheme()
+                    ? `rgba(31, 94, 255, ${this.opacity * 0.7})`
+                    : `rgba(0, 212, 255, ${this.opacity})`;
                 ctx.fill();
             }
         }
@@ -1716,7 +2096,9 @@
                         ctx.beginPath();
                         ctx.moveTo(p1.x, p1.y);
                         ctx.lineTo(p2.x, p2.y);
-                        ctx.strokeStyle = `rgba(0, 212, 255, ${0.1 * (1 - dist / 150)})`;
+                        ctx.strokeStyle = isLightTheme()
+                            ? `rgba(31, 94, 255, ${0.08 * (1 - dist / 150)})`
+                            : `rgba(0, 212, 255, ${0.1 * (1 - dist / 150)})`;
                         ctx.lineWidth = 0.5;
                         ctx.stroke();
                     }
